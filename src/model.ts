@@ -1,6 +1,16 @@
 import Tile from "./tile.js";
 import Event from "./event.js";
 import { AStarPath } from "./astarpath.js";
+import { DjikstraPath } from "./djisktrapath.js";
+
+enum State {
+  INITIAL_STATE, FIND_PATH_STATE
+}
+
+enum PathAlgorithm {
+  A_STAR,
+  DJIKSTRA
+}
 
 export default class Model {
   grid: Tile[][] = [];
@@ -17,18 +27,21 @@ export default class Model {
   startTile: Tile | null = null;
   goalTile: Tile | null = null;
 
-  state: string = "INITIAL_STATE";
+  state: State = State.INITIAL_STATE;
+  pathAlgorithm: PathAlgorithm = PathAlgorithm.A_STAR;
 
   startTileDragMode: boolean = false;
   goalTileDragMode: boolean = false;
+
+  includesDiagonals: boolean = false;
 
   constructor() {
     this.gridSize = 50;
 
     this.constructTiles();
 
-    this.setStartTile(this.getTileAt(10, 10)!);
-    this.setGoalTile(this.getTileAt(10, 50)!);
+    this.setStartTile(this.getTileAt(6, 6)!);
+    this.setGoalTile(this.getTileAt(14, 16)!);
   }
 
   setStartTile(tile: Tile) {
@@ -81,8 +94,8 @@ export default class Model {
 
       case "mouseover": {
         if (this.isWallPaintMode && !tile.isStart && !tile.isGoal) {
-          if (this.state ===  "FIND_PATH_STATE"){
-            this.state = "INITIAL_STATE";
+          if (this.state === State.FIND_PATH_STATE){
+            this.state = State.INITIAL_STATE;
             this.endPathStateEvent.trigger(null);
           }
           tile.isWall = true;
@@ -98,14 +111,39 @@ export default class Model {
   }
 
   async handleFindPathButtonClickedEvent() {
-    this.state = "FIND_PATH_STATE";
-    const path = AStarPath.findPath(this.startTile!, this.goalTile!, this);
+    this.state = State.FIND_PATH_STATE;
+    
+    let path;
+
+    switch(this.pathAlgorithm){
+      case PathAlgorithm.A_STAR:
+        path = AStarPath.findPath(this.startTile!, this.goalTile!, this);
+        break;
+      case PathAlgorithm.DJIKSTRA:
+        path = DjikstraPath.findPath(this.startTile!, this.goalTile!, this);
+        break;
+    }
 
     this.drawFinalPathEvent.trigger(await path);
   }
 
   handleResetWallsBtnClickedEvent() {
     this.grid.forEach(row => row.forEach(tile => tile.isWall = false));
+  }
+
+  handleAlgorithmSelectorChangedEvent(s: string) {
+    switch(s){
+      case 'a-star':
+        this.pathAlgorithm = PathAlgorithm.A_STAR;
+        break;
+      case 'djikstra':
+        this.pathAlgorithm = PathAlgorithm.DJIKSTRA;
+        break;
+    }
+  }
+
+  handleDiagonalsCheckboxToggledEvent(includesDiagonals: boolean){
+    this.includesDiagonals = includesDiagonals;
   }
 
   getTileAt(x: number, y: number): Tile | null {
@@ -121,18 +159,19 @@ export default class Model {
     const y = tile.y;
     const neighborsArr = new Array();
 
-    neighborsArr.push(this.getTileAt(x - 1, y - 1)); // top left
     neighborsArr.push(this.getTileAt(x, y - 1)); // top
-    neighborsArr.push(this.getTileAt(x + 1, y - 1)); // top right
-
     neighborsArr.push(this.getTileAt(x - 1, y)); // left
     neighborsArr.push(this.getTileAt(x + 1, y)); // right
-
-    neighborsArr.push(this.getTileAt(x - 1, y + 1)); // bottom left
     neighborsArr.push(this.getTileAt(x, y + 1)); // bottom
-    neighborsArr.push(this.getTileAt(x + 1, y + 1)); // bottom right
 
-    return neighborsArr.filter((t) => t !== null && !t.isWall);
+    if (this.includesDiagonals){
+      neighborsArr.push(this.getTileAt(x - 1, y - 1)); // top left
+      neighborsArr.push(this.getTileAt(x + 1, y - 1)); // top right
+      neighborsArr.push(this.getTileAt(x - 1, y + 1)); // bottom left
+      neighborsArr.push(this.getTileAt(x + 1, y + 1)); // bottom right
+    }
+
+    return neighborsArr.filter((t) => t !== null && !t.isWall).sort((a, b) => 0.5 - Math.random());
   }
 
   handleDragStartTile(e: MouseEvent, tile: Tile){

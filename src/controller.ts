@@ -24,6 +24,14 @@ export default class Controller {
             this.model.handleResetWallsBtnClickedEvent();
         });
 
+        this.view.algorithmSelectorChanged.addListener((algorithmName: string) => {
+            this.model.handleAlgorithmSelectorChangedEvent(algorithmName);
+        })
+
+        this.view.diagonalsCheckboxToggled.addListener((includesDiagonals: boolean) => {
+            this.model.handleDiagonalsCheckboxToggledEvent(includesDiagonals);
+        })
+
         this.view.startTileDragged.addListener((o: { e: MouseEvent; tile: Tile }) => {
             this.model.handleDragStartTile(o.e, o.tile);
         })

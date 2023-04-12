@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Pathfinding visualiser</title>
+</head>
+
+<body>
+  <header>
+    <h1>Pathfinding visualiser</h1>
+  </header>
+  <div class="container noselect">
+    <div id="toolbar">
+      <button name="find-path-btn" id="find-path-btn">Find path!</button>
+      <button name="reset-btn" id="reset-btn">Reset</button>
+      <label for="algorithm-selector">
+        Algorithm:
+        <select name="algorithm-selector" id="algorithm-selector">
+          <option value="a-star" selected="selected">A*</option>
+          <option value="djikstra">Dijkstra</option>
+        </select>
+      </label>
+      <label for="diagonals-checkbox">
+        Diagonals:
+        <input type="checkbox" name="diagonals-checkbox" id="diagonals-checkbox">
+      </label>
+
+      <div id="path-info"></div>
+    </div>
+    <svg id="root" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 400 400"></svg>
+  </div>
+  <script type="module" defer src="main.js"></script>
+</body>
+
+</html>

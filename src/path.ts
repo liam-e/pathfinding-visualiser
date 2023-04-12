@@ -14,7 +14,7 @@ export default abstract class Path {
     const dx = Math.abs(from.x - to.x);
     const dy = Math.abs(from.y - to.y);
 
-    if (dx == 1 && dy == 1) {
+    if ((dx == 1 && dy == 1)) {
       return Math.sqrt(2);
     } else if (dx == 1 || dy == 1) {
       return 1;
@@ -24,9 +24,11 @@ export default abstract class Path {
     }
   }
 
-  static heuristic(from: Tile, to: Tile) {
+  static heuristic(from: Tile, to: Tile, includesDiagonals: boolean) {
     const dx: number = Math.abs(from.x - to.x);
     const dy: number = Math.abs(from.y - to.y);
+
+    if (!includesDiagonals) return dx + dy;
 
     const maxLen = Math.max(dx, dy);
     const minLen = Math.min(dx, dy);

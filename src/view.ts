@@ -12,6 +12,8 @@ export default class View {
   svg;
   findPathBtn;
   resetWallsBtn;
+  algorithmSelector: HTMLSelectElement | null;
+  diagonalsCheckbox: HTMLInputElement | null;
   pathElement: Element | null = null;
   pathInfoDiv: Element | null;
 
@@ -21,6 +23,8 @@ export default class View {
   tileMouseEvent: Event = new Event();
   findPathBtnClicked: Event = new Event();
   resetWallsBtnClicked: Event = new Event();
+  algorithmSelectorChanged: Event = new Event();
+  diagonalsCheckboxToggled: Event = new Event();
   startTileDragged: Event = new Event();
   goalTileDragged: Event = new Event();
 
@@ -32,29 +36,35 @@ export default class View {
     this.findPathBtn = document.getElementById("find-path-btn");
     this.resetWallsBtn = document.getElementById("reset-btn");
 
+    this.algorithmSelector = document.getElementById("algorithm-selector") as HTMLSelectElement;
+    this.diagonalsCheckbox = document.getElementById("diagonals-checkbox") as HTMLInputElement;
+
     this.pathInfoDiv = document.getElementById("path-info");
 
     this.findPathBtn!.addEventListener("click", () => {
-        console.log("findPathBtn");
-        
       this.resetPathVisuals();
       this.findPathBtnClicked.trigger(null);
     });
 
     this.resetWallsBtn!.addEventListener("click", () => {
       this.resetWallsBtnClicked.trigger(null);
-      console.log("resetWallsBtn");
       this.resetPathVisuals();
       document
         .querySelectorAll(".wall")
         .forEach((e) => e.classList.remove("wall"));
     });
 
+    this.algorithmSelector!.addEventListener("change", () => {
+      this.algorithmSelectorChanged.trigger(this.algorithmSelector!.value);
+    })
+
+    this.diagonalsCheckbox!.addEventListener("change", () => {
+      this.diagonalsCheckboxToggled.trigger(this.diagonalsCheckbox!.checked);
+    })
+
     this.svg?.addEventListener("mousemove", (e) => {
       // Move logic out of View
       if(model.startTileDragMode){
-        // console.log(e.offsetX, e.offsetY);
-
         const tile = this.getTileAtPixelCoord(e.offsetX, e.offsetY, this.svg?.clientWidth!);
         if (tile !== null && !tile.isWall && !tile.isGoal){
           this.startTileDragged.trigger({e, tile});
@@ -187,7 +197,7 @@ export default class View {
   }
 
   drawFinalPath(){
-      if (this.finalPath === undefined || this.finalPath === []) return;
+      if (this.finalPath === undefined || this.finalPath.length === 0) return;
     this.pathElement = document.createElementNS(this.xmlns, "path");
     this.pathElement.classList.add("path-line");
     let d = "";
@@ -228,13 +238,12 @@ export default class View {
       this.animations = [];
       this.finalPath = [];
 
-      this.pathInfoDiv!.innerHTML = "<p>Begin by dragging the start (green), and goal (red) tiles, selecting walls with the mouse and hitting \"find shortest path\".</p>";
+      this.pathInfoDiv!.innerHTML = "<p>Begin by dragging the start (green), and goal (red) tiles, selecting walls with the mouse and hitting \"find path\".</p>";
   }
 
   getTileAtPixelCoord(xCoord: number, yCoord: number, size: number): Tile | null {
     const x = Math.floor(xCoord/ (size / this.model.gridSize));
     const y = Math.floor(yCoord/ (size / this.model.gridSize));
-    console.log(x, y);
     if (x < 0 || y < 0 || x >= this.model.gridSize || y >= this.model.gridSize) return null;
     return this.model.grid[y][x];
   }

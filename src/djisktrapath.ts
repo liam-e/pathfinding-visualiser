@@ -2,7 +2,7 @@ import Path from "./path.js";
 import Tile from "./tile.js";
 import Model from "./model.js";
 
-export class AStarPath extends Path {
+export class DjikstraPath extends Path {
   static async findPath(
     start: Tile,
     goal: Tile,
@@ -31,7 +31,7 @@ export class AStarPath extends Path {
       this.currentTileEvent.trigger(current);
 
       if (current === goal) {
-        path = AStarPath.reconstructPath(currentNode, model);
+        path = DjikstraPath.reconstructPath(currentNode, model);
         return path;
       }
       visited.add(current);
@@ -41,7 +41,7 @@ export class AStarPath extends Path {
       for (const neighbor of neighbors) {
         if (!visited.has(neighbor)) {
           let g = currentNode.g + Path.distance(current, neighbor);
-          let f = g + Path.heuristic(neighbor, goal, model.includesDiagonals);
+          let f = g;
 
           let neighborNode: AStarNode | null = fringe.removeNode(neighbor);
 

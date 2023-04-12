@@ -1,0 +1,107 @@
+:root {
+    --wallColorTransparent: rgba(0, 206, 209, 0);
+    --wallColor: rgba(0, 206, 209, 255);
+    --startColor: rgb(134, 238, 29);
+    --goalColor: rgb(255, 3, 62);
+    --currentColorTransparent: rgb(255, 252, 96, 0);
+    --currentColor: rgba(255, 252, 96, 255);
+    --pathColor: rgba(255, 255, 255, 255);
+}
+
+* {
+    border: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #222;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #ddd;
+}
+
+.tile {
+    stroke: var(--wallColor);
+    stroke-width: 1;
+    paint-order: stroke;
+}
+
+@keyframes wallFade {
+    from {fill: var(--wallColorTransparent);}
+    to {fill: var(--wallColor);}
+}
+
+@keyframes currentFade {
+    from {fill: var(--currentColorTransparent);}
+    to {fill: var(--currentColor);}
+}
+
+.wall {
+    fill: var(--wallColor);
+    animation-name: wallFade;
+    animation-duration: 0.15s;
+    animation-timing-function: ease-out;
+}
+
+.start {
+    fill: var(--startColor) !important;
+}
+
+.goal {
+    fill: var(--goalColor) !important;
+}
+
+.current {
+    fill: var(--currentColor);
+    animation-name: currentFade;
+    animation-duration: 0.15s;
+    animation-timing-function: ease-out;
+}
+
+.path-line {
+    pointer-events: none;
+    fill: none;
+    stroke:var(--pathColor);
+    stroke-width: 2;
+    stroke-linecap: round;
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+label {
+    display: flex;
+    align-items: center;
+}
+
+button, label {
+    margin: 1em;
+    padding: 0.5em 1em;
+    max-lines: 1;
+}
+
+select {
+    margin: 1em;
+    padding: 0.5em;
+}
+
+#toolbar {
+    display: flex;
+    height: 5em;
+}
+
+#path-info p {
+    padding: 0.5em;
+    max-lines: 2;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+}
+
+#find-path-btn {
+    background: var(--startColor);
+}
