@@ -1,16 +1,16 @@
 # Pathfinding visualiser
 
-A simple visualiser using vanilla JavaScript with TypeScript, and SVG, using the Model-View-Controller and Pub/Sub patterns.
+An interactive pathfinding algorithm visualiser using vanilla JavaScript/TypeScript.
 
-## Motivation
+This web app demonstrates and compares different pathfinding algorithms visually, with full interactivity. I chose to make this a web app using JavaScript, as it can run in a web browser and manipulate objects in the app without having to reload the page. However, I wanted to see if I could implement dynamic functionality without the use of external libraries such as React. I decided this firstly for my own learning and secondly because I felt it would have added unneeded complexity for a project of this size. However, I did decide to incorporate TypeScript into the project for its powerful type safety.
 
-I wanted to build an app to demonstrate and compare different pathfinding algorithms visually, with full interactivity. I chose to make this a web app using JavaScript, as the app can run in a web browser and can manipulate objects in the app without having to reload the page. However, I wanted to see if I could implement dynamic functionality without the use of external libraries such as React, firstly for my own learning, and secondly because I feel it would have added unneeded complexity for a project of this size. I did however decide to incorporate TypeScript into the project for its powerful type-safety.
+The project adheres to the Model-View-Controller and Publish-Subscribe patterns. MVC allows for a nice separation of concerns, resulting in cleaner code. Additionally, the Publish-Subscribe pattern lets objects receive messages to allow them to respond in real-time while keeping things loosely coupled.
 
-The pathfinding squares are drawn simply using an SVG object, where the squares can be drawn as rectangles. The find-path animation is played asynchronously, before the full path has been found.
+The pathfinding squares are drawn simply using an SVG object, where the squares can be drawn as rectangles. The app uses incremental rendering, where the find-path animation plays before the full path has been found.
 
 ## Installation
 
-Make sure you have [TypeScript](https://www.typescriptlang.org/download) installed.
+Make sure [TypeScript](https://www.typescriptlang.org/download) is installed.
 
 Clone the project
 
