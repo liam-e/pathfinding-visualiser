@@ -19,7 +19,7 @@ git clone https://github.com/liam-e/pathfinding-visualiser.git
 cd pathfinding-visualiser/
 ```
 
-Run the TypeScipt compiler
+Run the TypeScript compiler
 
 ```sh
 npx tsc
